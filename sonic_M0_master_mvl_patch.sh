@@ -15,7 +15,7 @@ set -e
 
 SONIC_MASTER_JUN30_COMMIT="ed7fafce7741f4641d128f8c053eabfeaac7de80"
 
-declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7)
+declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8)
 
 url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
@@ -27,6 +27,7 @@ declare -A P4=( [NAME]=sonic-mgmt-framework [DIR]=src/sonic-mgmt-framework [PR]=
 declare -A P5=( [NAME]=sonic-linux-kernel [DIR]=src/sonic-linux-kernel [PR]="" [URL]="$url" [PREREQ]="apply_buster_kernel" )
 declare -A P6=( [NAME]=sonic-platform-common [DIR]=src/sonic-platform-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P7=( [NAME]=sonic-snmpagent [DIR]=src/sonic-snmpagent [PR]="134" [URL]="$url" [PREREQ]="" )
+declare -A P8=( [NAME]=sonic-sairedis [DIR]=src/sonic-sairedis [PR]="643" [URL]="$url" [PREREQ]="" )
 
 #
 # END of CONFIGURATIONS
@@ -135,6 +136,8 @@ sudo cp $IMAGE_CONFIGS/platform/ent.py $FILESYSTEM_ROOT/etc/' files/build_templa
     sed -i '/build_version/i \
 python /etc/ent.py &' files/image_config/platform/rc.local
 
+   # enable sflow
+   sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 }
 
 inband_mgmt_fix()
