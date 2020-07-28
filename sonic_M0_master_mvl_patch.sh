@@ -138,6 +138,9 @@ python /etc/ent.py &' files/image_config/platform/rc.local
 
    # enable sflow
    sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
+
+   # Starting teamd after syncd. issue(4015)
+   sed -i 's/After=updategraph.service/After=updategraph.service syncd.service/g' files/build_templates/per_namespace/teamd.service.j2
 }
 
 inband_mgmt_fix()
