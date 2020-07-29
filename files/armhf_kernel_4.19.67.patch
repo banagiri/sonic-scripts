@@ -1,50 +1,19 @@
 diff --git a/Makefile b/Makefile
-index 26de647..3f6bb33 100644
+index 9fe08c3..2c2a6f6 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -12,7 +12,7 @@ CONFIGURED_ARCH ?= amd64
+@@ -12,7 +12,11 @@ CONFIGURED_ARCH ?= amd64
  
  LINUX_HEADER_COMMON = linux-headers-$(KVERSION_SHORT)-common_$(KERNEL_VERSION)-$(KERNEL_SUBVERSION)_all.deb
  LINUX_HEADER_AMD64 = linux-headers-$(KVERSION)_$(KERNEL_VERSION)-$(KERNEL_SUBVERSION)_$(CONFIGURED_ARCH).deb
--LINUX_IMAGE = linux-image-$(KVERSION)-unsigned_$(KERNEL_VERSION)-$(KERNEL_SUBVERSION)_$(CONFIGURED_ARCH).deb
++ifeq ($(CONFIGURED_ARCH), armhf)
 +LINUX_IMAGE = linux-image-$(KVERSION)_$(KERNEL_VERSION)-$(KERNEL_SUBVERSION)_$(CONFIGURED_ARCH).deb
++else
+ LINUX_IMAGE = linux-image-$(KVERSION)-unsigned_$(KERNEL_VERSION)-$(KERNEL_SUBVERSION)_$(CONFIGURED_ARCH).deb
++endif
  
  MAIN_TARGET = $(LINUX_HEADER_COMMON)
  DERIVED_TARGETS = $(LINUX_HEADER_AMD64) $(LINUX_IMAGE)
-@@ -74,13 +74,13 @@ $(addprefix $(DEST)/, $(MAIN_TARGET)): $(DEST)/% :
- 	debian/bin/gencontrol.py
- 
- 	# generate linux build file for amd64_none_amd64
--	# fakeroot make -f debian/rules.gen setup_armhf_none_armmp
--	# fakeroot make -f debian/rules.gen setup_arm64_none
--	fakeroot make -f debian/rules.gen setup_amd64_none_amd64
-+	fakeroot make -f debian/rules.gen DEB_HOST_ARCH=armhf setup_armhf_none_armmp
-+	fakeroot make -f debian/rules.gen DEB_HOST_ARCH=arm64 setup_arm64_none
-+	fakeroot make -f debian/rules.gen DEB_HOST_ARCH=amd64 setup_amd64_none_amd64
- 
- 	# Applying patches and configuration changes
--	# git add debian/build/build_armhf_none_armmp/.config -f
--	# git add debian/build/build_arm64_none_arm64/.config -f
-+	git add debian/build/build_armhf_none_armmp/.config -f
-+	git add debian/build/build_arm64_none_arm64/.config -f
- 	git add debian/build/build_amd64_none_amd64/.config -f
- 	git add debian/config.defines.dump -f
- 	git add debian/control -f
-@@ -93,11 +93,11 @@ $(addprefix $(DEST)/, $(MAIN_TARGET)): $(DEST)/% :
- 	stg import -s ../patch/series
- 
- 	# Building a custom kernel from Debian kernel source
--	DO_DOCS=False fakeroot make -f debian/rules -j $(shell nproc) binary-indep
-+	DO_DOCS=False ARCH=$(CONFIGURED_ARCH) DEB_HOST_ARCH=$(CONFIGURED_ARCH) fakeroot make -f debian/rules -j $(shell nproc) binary-indep
- ifeq ($(CONFIGURED_ARCH), armhf)
--	fakeroot make -f debian/rules.gen -j $(shell nproc) binary-arch_$(CONFIGURED_ARCH)_none_armmp
-+	ARCH=$(CONFIGURED_ARCH) DEB_HOST_ARCH=$(CONFIGURED_ARCH) fakeroot make -f debian/rules.gen -j $(shell nproc) binary-arch_$(CONFIGURED_ARCH)_none_armmp
- else
--	fakeroot make -f debian/rules.gen -j $(shell nproc) binary-arch_$(CONFIGURED_ARCH)_none
-+	ARCH=$(CONFIGURED_ARCH) DEB_HOST_ARCH=$(CONFIGURED_ARCH) fakeroot make -f debian/rules.gen -j $(shell nproc) binary-arch_$(CONFIGURED_ARCH)_none
- endif
- 	popd
- 
 diff --git a/patch/0100-armhf-build_workaround.patch b/patch/0100-armhf-build_workaround.patch
 new file mode 100644
 index 0000000..9bfaf82
@@ -76,7 +45,7 @@ index 0000000..9bfaf82
 +2.7.4
 diff --git a/patch/0100-armhf-configs.patch b/patch/0100-armhf-configs.patch
 new file mode 100644
-index 0000000..ef60f57
+index 0000000..38e695e
 --- /dev/null
 +++ b/patch/0100-armhf-configs.patch
 @@ -0,0 +1,2156 @@
@@ -2718,12 +2687,12 @@ index 0000000..b3ad74b
 +2.7.4
 +
 diff --git a/patch/series b/patch/series
-index ca69aa7..5228c49 100755
+index dad09fe..b5a0d74 100755
 --- a/patch/series
 +++ b/patch/series
-@@ -80,3 +80,11 @@ net-fix-skb-csum-update-in-inet_proto_csum_replace16.patch
- 0010-platform-mellanox-mlxreg-hotplug-Add-environmental-d.patch
- 0011-mlxsw-core-thermal-Separate-temperature-trend-read-c.patch
+@@ -65,3 +65,11 @@ net-fix-skb-csum-update-in-inet_proto_csum_replace16.patch
+ 0012-Add-support-for-new-transceivers-types-QSFP-DD-and-Q.patch
+ 0013-watchdog-mlx-wdt-support-new-watchdog-type-with-long.patch
  
 +0100-armhf-configs.patch
 +0100-armhf-build_workaround.patch

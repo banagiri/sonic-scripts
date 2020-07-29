@@ -20,8 +20,8 @@ declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8)
 url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
 
-declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687" [URL]="$url" [PREREQ]="" [POSTREQ]="")
-declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325" [URL]="$url" [PREREQ]="" )
+declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687 5058" [URL]="$url" [PREREQ]="" [POSTREQ]="")
+declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369" [URL]="$url" [PREREQ]="" )
 declare -A P3=( [NAME]=sonic-swss-common [DIR]=src/sonic-swss-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P4=( [NAME]=sonic-mgmt-framework [DIR]=src/sonic-mgmt-framework [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P5=( [NAME]=sonic-linux-kernel [DIR]=src/sonic-linux-kernel [PR]="" [URL]="$url" [PREREQ]="apply_buster_kernel" )
@@ -138,6 +138,9 @@ python /etc/ent.py &' files/image_config/platform/rc.local
 
    # enable sflow
    sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
+
+   # Starting teamd after syncd. issue(4015)
+   sed -i 's/After=updategraph.service/After=updategraph.service syncd.service/g' files/build_templates/per_namespace/teamd.service.j2
 }
 
 inband_mgmt_fix()
@@ -183,13 +186,11 @@ inband_mgmt(){\
 
 apply_buster_kernel()
 {
-    git checkout master
-    git checkout e2dbd4ced8c32d43844ae1e2066624113a5e0e1d
     wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/armhf_kernel_4.19.67.patch
 
     patch -p1 --dry-run < ./armhf_kernel_4.19.67.patch
     echo "Patching 4.19.67 armhf"
-    #patch -p1 < ./armhf_kernel_4.19.67.patch
+    patch -p1 < ./armhf_kernel_4.19.67.patch
 }
 
 build_kernel_buster()
