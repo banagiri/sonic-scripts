@@ -1,5 +1,5 @@
 diff --git a/scripts/generate_dump b/scripts/generate_dump
-index 01e45f8..390c7b7 100755
+index 01e45f8..2e5abc6 100755
 --- a/scripts/generate_dump
 +++ b/scripts/generate_dump
 @@ -182,7 +182,7 @@ save_nat_info() {
@@ -7,33 +7,7 @@ index 01e45f8..390c7b7 100755
      local procfiles="$@"
      $MKDIR $V -p $TARDIR/proc \
 -        && $CP $V -r $procfiles $TARDIR/proc \
-+        && (for f in $procfiles; do $CP $V -r $f $TARDIR/proc || echo "$f not found" > $TARDIR/$f; done) \
-         && $TAR $V -rhf $TARFILE -C $DUMPDIR --mode=+rw $BASE/proc \
-         && $RM $V -rf $TARDIR/proc
- }
-@@ -517,10 +517,12 @@ main() {
-         fi
-     done
- 
-+    if [[ "$asic" = "mellanox" ]]; then
-     # run 'hw-management-generate-dump.sh' script and save the result file
-     /usr/bin/hw-management-generate-dump.sh
-     save_file "/tmp/hw-mgmt-dump*" "hw-mgmt" false
-     rm -f /tmp/hw-mgmt-dump*
-+    fi
- 
-     # clean up working tar dir before compressing
-     $RM $V -rf $TARDIR
-diff --git a/scripts/generate_dump b/scripts/generate_dump
-index 390c7b7..ef7db50 100755
---- a/scripts/generate_dump
-+++ b/scripts/generate_dump
-@@ -182,7 +182,7 @@ save_nat_info() {
- save_proc() {
-     local procfiles="$@"
-     $MKDIR $V -p $TARDIR/proc \
--        && (for f in $procfiles; do $CP $V -r $f $TARDIR/proc || echo "$f not found" > $TARDIR/$f; done) \
-+	    && (for f in $procfiles; do ( [ -e $f ] && $CP $V -r $f $TARDIR/proc ) || echo "$f not found" > $TARDIR/$f; done) \
++        && (for f in $procfiles; do ( [ -e $f ] && $CP $V -r $f $TARDIR/proc ) || echo "$f not found" > $TARDIR/$f; done) \
          && $TAR $V -rhf $TARFILE -C $DUMPDIR --mode=+rw $BASE/proc \
          && $RM $V -rf $TARDIR/proc
  }
@@ -55,6 +29,16 @@ index 390c7b7..ef7db50 100755
          # don't gzip already-gzipped dmesg files :)
          if [ ! ${file} = "/var/crash/kexec_cmd" -a ! ${file} = "/var/crash/export" ]; then
              if [[ ${file} == *"kdump."* ]]; then
--- 
-2.17.1
-
+@@ -517,10 +517,12 @@ main() {
+         fi
+     done
+ 
++    if [[ "$asic" = "mellanox" ]]; then
+     # run 'hw-management-generate-dump.sh' script and save the result file
+     /usr/bin/hw-management-generate-dump.sh
+     save_file "/tmp/hw-mgmt-dump*" "hw-mgmt" false
+     rm -f /tmp/hw-mgmt-dump*
++    fi
+ 
+     # clean up working tar dir before compressing
+     $RM $V -rf $TARDIR
