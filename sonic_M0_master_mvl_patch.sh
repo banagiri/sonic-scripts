@@ -20,7 +20,7 @@ declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8)
 url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
 
-declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687 5058" [URL]="$url" [PREREQ]="" [POSTREQ]="")
+declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687" [URL]="$url" [PREREQ]="" [POSTREQ]="")
 declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369" [URL]="$url" [PREREQ]="" )
 declare -A P3=( [NAME]=sonic-swss-common [DIR]=src/sonic-swss-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P4=( [NAME]=sonic-mgmt-framework [DIR]=src/sonic-mgmt-framework [PR]="" [URL]="$url" [PREREQ]="" )
@@ -139,7 +139,16 @@ python /etc/ent.py &' files/image_config/platform/rc.local
    # enable sflow
    sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 
-   # Starting teamd after syncd. issue(4015)
+   # Set Arp thresholds
+   sed -i '/build_version/i \
+sysctl -w net.ipv4.neigh.default.gc_thresh1=32000\
+sysctl -w net.ipv4.neigh.default.gc_thresh2=48000\
+sysctl -w net.ipv4.neigh.default.gc_thresh3=56000\
+sysctl -w net.ipv6.neigh.default.gc_thresh1=8000\
+sysctl -w net.ipv6.neigh.default.gc_thresh2=16000\
+sysctl -w net.ipv6.neigh.default.gc_thresh3=32000' files/image_config/platform/rc.local
+
+   # Starting teamd after syncd. (PR #4016)
    sed -i 's/After=updategraph.service/After=updategraph.service syncd.service/g' files/build_templates/per_namespace/teamd.service.j2
 }
 
@@ -251,11 +260,20 @@ sudo https_proxy=$https_proxy LANG=C chroot $FILESYSTEM_ROOT pip install wheel' 
     # snmp subagent
     echo 'sudo sed -i "s/python3.6/python3/g" $FILESYSTEM_ROOT/etc/monit/conf.d/monit_snmp' >> files/build_templates/sonic_debian_extension.j2
 
+    # Update redis version
+    sed -i 's/redis-tools=5:6.0.5-1~bpo10+1/redis-tools=5:6.0.6-1~bpo10+1/g' dockers/docker-base-buster/Dockerfile.j2
+    sed -i 's/redis-server=5:6.0.5-1~bpo10+1/redis-server=5:6.0.6-1~bpo10+1/g' dockers/docker-database/Dockerfile.j2
+
     # sonic_generate_dump patch
     pushd src/sonic-utilities
     wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/sonic_generate_dump.patch
     patch -p1 --dry-run < ./sonic_generate_dump.patch
     patch -p1 < ./sonic_generate_dump.patch
+
+    # cli performance improvement patch
+    wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/cli_perf_improvement.patch
+    patch -p1 --dry-run < ./cli_perf_improvement.patch
+    patch -p1 < ./cli_perf_improvement.patch
     popd
 }
 
