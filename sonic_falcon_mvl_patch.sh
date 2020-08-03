@@ -78,18 +78,10 @@ apply_buster_kernel()
 
 build_kernel_buster()
 {
-    wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/armhf_build_kernel_4.19.67.patch
-    patch -p1 --dry-run < ./armhf_build_kernel_4.19.67.patch
+    wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/arm64_build_kernel_4.19.67.patch
+    patch -p1 --dry-run < ./arm64_build_kernel_4.19.67.patch
     echo "Patching 4.19.67 build rules"
-    patch -p1 < ./armhf_build_kernel_4.19.67.patch
-}
-
-build_falcon()
-{
-    wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/mrvl_JUN30_patch.patch
-    patch -p1 --dry-run < ./mrvl_JUN30_patch.patch
-    echo "Patching mrvl_JUN30_patch.patch"
-    patch -p1 < ./mrvl_JUN30_patch.patch
+    patch -p1 < ./arm64_build_kernel_4.19.67.patch
 }
 
 build_arm64_falcon()
@@ -144,6 +136,9 @@ sudo https_proxy=$https_proxy LANG=C chroot $FILESYSTEM_ROOT pip install wheel' 
 
     # snmp subagent
     echo 'sudo sed -i "s/python3.6/python3/g" $FILESYSTEM_ROOT/etc/monit/conf.d/monit_snmp' >> files/build_templates/sonic_debian_extension.j2
+
+    # enable sflow
+    sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 
     # sonic_generate_dump patch
     pushd src/sonic-utilities
@@ -387,12 +382,8 @@ main()
 
     #build_fixes
 
-
-  
     build_kernel_buster
     
-    build_falcon
-
     misc_workarounds
 
     master_sonic_fix    
