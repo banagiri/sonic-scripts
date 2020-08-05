@@ -139,7 +139,7 @@ sudo https_proxy=$https_proxy LANG=C chroot $FILESYSTEM_ROOT pip install wheel' 
     echo 'sudo sed -i "s/python3.6/python3/g" $FILESYSTEM_ROOT/etc/monit/conf.d/monit_snmp' >> files/build_templates/sonic_debian_extension.j2
 
     # enable sflow
-    sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
+    #sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 
     # sonic_generate_dump patch
     pushd src/sonic-utilities

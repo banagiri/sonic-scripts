@@ -137,7 +137,7 @@ sudo cp $IMAGE_CONFIGS/platform/ent.py $FILESYSTEM_ROOT/etc/' files/build_templa
 python /etc/ent.py &' files/image_config/platform/rc.local
 
    # enable sflow
-   sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
+   #sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 
    # Set Arp thresholds
    sed -i '/build_version/i \
