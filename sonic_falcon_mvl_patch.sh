@@ -69,11 +69,11 @@ installer_patch()
 
 apply_buster_kernel()
 {
-    wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/armhf_kernel_4.19.67.patch
+    wget -c https://raw.githubusercontent.com/Marvell-switching/sonic-scripts/master/files/linux-ARM64-and-ARMHF-build-changes.patch
 
-    patch -p1 --dry-run < ./armhf_kernel_4.19.67.patch
-    echo "Patching 4.19.67 armhf"
-    patch -p1 < ./armhf_kernel_4.19.67.patch
+    patch -p1 --dry-run < ./linux-ARM64-and-ARMHF-build-changes.patch
+    echo "Patching 4.19.67 arm changes"
+    patch -p1 < ./linux-ARM64-and-ARMHF-build-changes.patch
 }
 
 build_kernel_buster()
@@ -91,6 +91,7 @@ build_arm64_falcon()
     echo "Patching mrvl_arm64_build_patch.patch"
     patch -p1 < ./mrvl_arm64_build_patch.patch
 }
+
 master_sonic_fix()
 {
 
