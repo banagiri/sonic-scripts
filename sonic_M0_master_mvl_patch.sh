@@ -139,15 +139,6 @@ python /etc/ent.py &' files/image_config/platform/rc.local
    # enable sflow
    #sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 
-   # Set Arp thresholds
-   sed -i '/build_version/i \
-sysctl -w net.ipv4.neigh.default.gc_thresh1=32000\
-sysctl -w net.ipv4.neigh.default.gc_thresh2=48000\
-sysctl -w net.ipv4.neigh.default.gc_thresh3=56000\
-sysctl -w net.ipv6.neigh.default.gc_thresh1=8000\
-sysctl -w net.ipv6.neigh.default.gc_thresh2=16000\
-sysctl -w net.ipv6.neigh.default.gc_thresh3=32000' files/image_config/platform/rc.local
-
    # Starting teamd after syncd. (PR #4016)
    sed -i 's/After=updategraph.service/After=updategraph.service syncd.service/g' files/build_templates/per_namespace/teamd.service.j2
 }
