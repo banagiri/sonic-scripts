@@ -46,7 +46,7 @@ pre_patch_help()
     log "STEPS TO BUILD:"
     log "git clone https://github.com/Azure/sonic-buildimage.git"
     log "cd sonic-buildimage"
-    log "git checkout SONIC_MASTER_JUN30_COMMIT"
+    log "git checkout $SONIC_MASTER_JUN30_COMMIT"
     log "make init"
 
     log "<<Apply patches using patch script>>" 
