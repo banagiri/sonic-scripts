@@ -21,7 +21,7 @@ url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
 
 declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687" [URL]="$url" [PREREQ]="" [POSTREQ]="")
-declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369" [URL]="$url" [PREREQ]="" )
+declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369 1407" [URL]="$url" [PREREQ]="" )
 declare -A P3=( [NAME]=sonic-swss-common [DIR]=src/sonic-swss-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P4=( [NAME]=sonic-mgmt-framework [DIR]=src/sonic-mgmt-framework [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P5=( [NAME]=sonic-linux-kernel [DIR]=src/sonic-linux-kernel [PR]="" [URL]="$url" [PREREQ]="apply_buster_kernel" )
@@ -140,7 +140,7 @@ python /etc/ent.py &' files/image_config/platform/rc.local
    #sed -i 's/("sflow", "disabled")/("sflow", "enabled")/g' files/build_templates/init_cfg.json.j2
 
    # Starting teamd after syncd. (PR #4016)
-   sed -i 's/After=updategraph.service/After=updategraph.service syncd.service/g' files/build_templates/per_namespace/teamd.service.j2
+   #sed -i 's/After=updategraph.service/After=updategraph.service syncd.service/g' files/build_templates/per_namespace/teamd.service.j2
 }
 
 inband_mgmt_fix()
