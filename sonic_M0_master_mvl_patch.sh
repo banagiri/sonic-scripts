@@ -13,7 +13,7 @@ set -e
 # CONFIGURATIONS:-
 #
 
-SONIC_MASTER_JUN30_COMMIT="ed7fafce7741f4641d128f8c053eabfeaac7de80"
+SONIC_MASTER_JUN30_COMMIT="96fedf1ae9ebcc6604daced6b7dd577eaeb26883"
 
 declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8)
 
@@ -21,7 +21,7 @@ url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
 
 declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687" [URL]="$url" [PREREQ]="" [POSTREQ]="")
-declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369 1407" [URL]="$url" [PREREQ]="" )
+declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369 1407 1347" [URL]="$url" [PREREQ]="" )
 declare -A P3=( [NAME]=sonic-swss-common [DIR]=src/sonic-swss-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P4=( [NAME]=sonic-mgmt-framework [DIR]=src/sonic-mgmt-framework [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P5=( [NAME]=sonic-linux-kernel [DIR]=src/sonic-linux-kernel [PR]="" [URL]="$url" [PREREQ]="apply_buster_kernel" )
