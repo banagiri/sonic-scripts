@@ -15,7 +15,7 @@ set -e
 
 SONIC_MASTER_JUN30_COMMIT="96fedf1ae9ebcc6604daced6b7dd577eaeb26883"
 
-declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8)
+declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8 P9)
 
 url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
@@ -28,6 +28,7 @@ declare -A P5=( [NAME]=sonic-linux-kernel [DIR]=src/sonic-linux-kernel [PR]="" [
 declare -A P6=( [NAME]=sonic-platform-common [DIR]=src/sonic-platform-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P7=( [NAME]=sonic-snmpagent [DIR]=src/sonic-snmpagent [PR]="134" [URL]="$url" [PREREQ]="" )
 declare -A P8=( [NAME]=sonic-sairedis [DIR]=src/sonic-sairedis [PR]="643" [URL]="$url" [PREREQ]="" )
+declare -A P9=( [NAME]=sonic-utilities [DIR]=src/sonic-utilities [PR]="1140" [URL]="$url" [PREREQ]="" [POSTREQ]="")
 
 #
 # END of CONFIGURATIONS
