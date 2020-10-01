@@ -20,15 +20,15 @@ declare -a PATCHES=(P1 P2 P3 P4 P5 P6 P7 P8 P9)
 url="https://github.com/Azure"
 urlsai="https://patch-diff.githubusercontent.com/raw/opencomputeproject"
 
-declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687 5252" [URL]="$url" [PREREQ]="" [POSTREQ]="")
-declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369 1407" [URL]="$url" [PREREQ]="" )
+declare -A P1=( [NAME]=sonic-buildimage [DIR]=. [PR]="3687 5252 5500 5519" [URL]="$url" [PREREQ]="" [POSTREQ]="")
+declare -A P2=( [NAME]=sonic-swss [DIR]=src/sonic-swss [PR]="1325 1273 1369 1407 1454" [URL]="$url" [PREREQ]="" )
 declare -A P3=( [NAME]=sonic-swss-common [DIR]=src/sonic-swss-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P4=( [NAME]=sonic-mgmt-framework [DIR]=src/sonic-mgmt-framework [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P5=( [NAME]=sonic-linux-kernel [DIR]=src/sonic-linux-kernel [PR]="" [URL]="$url" [PREREQ]="apply_buster_kernel" )
 declare -A P6=( [NAME]=sonic-platform-common [DIR]=src/sonic-platform-common [PR]="" [URL]="$url" [PREREQ]="" )
 declare -A P7=( [NAME]=sonic-snmpagent [DIR]=src/sonic-snmpagent [PR]="134" [URL]="$url" [PREREQ]="" )
 declare -A P8=( [NAME]=sonic-sairedis [DIR]=src/sonic-sairedis [PR]="643" [URL]="$url" [PREREQ]="" )
-declare -A P9=( [NAME]=sonic-utilities [DIR]=src/sonic-utilities [PR]="1140" [URL]="$url" [PREREQ]="" [POSTREQ]="")
+declare -A P9=( [NAME]=sonic-utilities [DIR]=src/sonic-utilities [PR]="1140 1146" [URL]="$url" [PREREQ]="" [POSTREQ]="")
 
 #
 # END of CONFIGURATIONS
